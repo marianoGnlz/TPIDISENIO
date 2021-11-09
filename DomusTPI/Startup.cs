@@ -1,3 +1,5 @@
+using DomusTPI.IServices;
+using DomusTPI.Services;
 using DomusTPITPI.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,6 +28,9 @@ namespace DomusTPITPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddScoped<IClientesService, ClientesService>();
+
             services.AddDbContext<TPIContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

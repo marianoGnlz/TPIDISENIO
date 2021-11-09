@@ -7,16 +7,44 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DomusTPI.Models;
 using DomusTPITPI.Models;
+using DomusTPI.IServices;
 
 namespace DomusTPI.Controllers
 {
     public class ClientesController : Controller
     {
         private readonly TPIContext _context;
+        private readonly IClientesService _clientesService;
 
-        public ClientesController(TPIContext context)
+        public ClientesController(TPIContext context, IClientesService clientesService)
         {
             _context = context;
+            _clientesService = clientesService;
+        }
+
+        public ActionResult<Request<IList<Cliente>>> GetClientes()
+        {
+            Request<IList<Cliente>> req = _clientesService.GetClientes();
+            if (req.Success)
+            {
+                return Ok(req);
+            }
+            else
+            {
+                return BadRequest(req);
+            }
+        }
+        public ActionResult<Request<Cliente>> GetCliente(int id)
+        {
+            Request<Cliente> req = _clientesService.GetCliente(id);
+            if (req.Success)
+            {
+                return Ok(req);
+            }
+            else
+            {
+                return BadRequest(req);
+            }
         }
 
         // GET: Clientes
@@ -24,6 +52,7 @@ namespace DomusTPI.Controllers
         {
             return View(await _context.Clientes.ToListAsync());
         }
+
 
         // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -117,31 +146,31 @@ namespace DomusTPI.Controllers
         }
 
         // GET: Clientes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.IdCliente == id);
-            if (cliente == null)
+            Request<Cliente> req = _clientesService.GetCliente((int) id);
+
+            if (!req.Success)
             {
                 return NotFound();
             }
 
-            return View(cliente);
+            return View(req.Data);
         }
 
         // POST: Clientes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
-            _context.Clientes.Remove(cliente);
-            await _context.SaveChangesAsync();
+            Request<Cliente> req = _clientesService.GetCliente((int)id);
+            _context.Clientes.Remove(req.Data);
+            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 

@@ -9,10 +9,10 @@ namespace DomusTPI.Models
     {
         private string nombre;
         private string apellido;
-        private int dni;
-        private int cuil;
+        private string dni;
+        private string cuil;
         private DateTime fechaDeNacimiento;
-        private int telefono;
+        private string telefono;
         private string email;
 
         public string Nombre
@@ -25,12 +25,12 @@ namespace DomusTPI.Models
             get { return apellido; }
             set { apellido = value; }
         }
-        public int DNI
+        public string DNI
         {
             get { return dni; }
             set { dni = value; }
         }
-        public int CUIL
+        public string CUIL
         {
             get { return cuil; }
             set { cuil = value; }
@@ -40,7 +40,7 @@ namespace DomusTPI.Models
             get { return fechaDeNacimiento; }
             set { fechaDeNacimiento = value; }
         }
-        public int Telefono
+        public string Telefono
         {
             get { return telefono; }
             set { telefono = value; }
